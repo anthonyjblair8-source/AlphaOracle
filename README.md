@@ -12,7 +12,7 @@ Oracle bone script (OBS) are among the world’s independently evolved scripts, 
 
 ![version](https://img.shields.io/badge/Version-v1.0-007acc)
 ![status](https://img.shields.io/badge/Status-active-00c853)
-[![demo](https://img.shields.io/badge/Demo-available-ff9800)](http://www.alphaoracle.cn:8224/?lan=en)
+[![demo](https://img.shields.io/badge/Demo-available-ff9800)](http://vlrlabmonkey.xyz:7685/?lan=en)
 [![license](https://img.shields.io/badge/License-Apache-green)](LICENSE)
 
 [English](README.md) | [中文](README_zh-CN.md)

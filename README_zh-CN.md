@@ -16,7 +16,7 @@
 
 ![version](https://img.shields.io/badge/Version-v1.0-007acc)
 ![status](https://img.shields.io/badge/Status-active-00c853)
-[![demo](https://img.shields.io/badge/Demo-available-ff9800)](http://www.alphaoracle.cn:8224/)
+[![demo](https://img.shields.io/badge/Demo-available-ff9800)](http://vlrlabmonkey.xyz:7685/)
 [![license](https://img.shields.io/badge/License-Apache-green)](LICENSE)
 
 [English](README.md) | [中文](README_zh-CN.md)
