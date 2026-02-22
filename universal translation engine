@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+"""
+Oracle Bone Inscription Translation Codex
+Based on AlphaOracle + PHCA framework
+Author: Assistant
+Date: 2025-03-05
+"""
+
+import re
+from typing import Dict, List, Tuple, Optional
+
+# ========================== DATA ==========================
+
+# Tiangan (Heavenly Stems)
+TIANGAN = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
+# Dizhi (Earthly Branches)
+DIZHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+
+# Generate 60-day cycle mapping
+CYCLICAL_DAYS = {}
+for i in range(60):
+    tg = TIANGAN[i % 10]
+    dz = DIZHI[i % 12]
+    day_str = tg + dz
+    # Store day number (1-based) and pinyin name
+    CYCLICAL_DAYS[day_str] = {
+        "number": i + 1,
+        "pinyin": f"{tg}{dz}"  # Simplified; actual pinyin would be more complex
+    }
+
+# Glossary of key terms
+GLOSSARY = {
+    "卜": {"meaning": "to divine, divination", "type": "verb"},
+    "貞": {"meaning": "to ask (the oracle)", "type": "verb"},
+    "王": {"meaning": "the king", "type": "noun"},
+    "大乙": {"meaning": "Grand Ancestor Yi (Tang, founder of Shang)", "type": "ancestor"},
+    "又": {"meaning": "offering, to offer; also '有' (to have)", "type": "verb/particle"},
+    "有": {"meaning": "to have, there is/are", "type": "verb"},
+    "鼎": {"meaning": "ritual vessel; sacrifice", "type": "noun"},
+    "藏": {"meaning": "to store; storage ritual", "type": "verb"},
+    "成": {"meaning": "to accomplish, complete (a ritual)", "type": "verb"},
+    "吉": {"meaning": "auspicious", "type": "adj"},
+    "于": {"meaning": "at, on, for, to", "type": "preposition"},
+    "巳": {"meaning": "6th earthly branch (associated with snake)", "type": "cyclical"},
+    "卯": {"meaning": "4th earthly branch", "type": "cyclical"},
+    "未": {"meaning": "8th earthly branch", "type": "cyclical"},
+    "午": {"meaning": "7th earthly branch", "type": "cyclical"},
+    "辛": {"meaning": "8th heavenly stem", "type": "cyclical"},
+    "庚": {"meaning": "7th heavenly stem", "type": "cyclical"},
+    "乙": {"meaning": "2nd heavenly stem", "type": "cyclical"},
+    "丁": {"meaning": "4th heavenly stem", "type": "cyclical"},
+    "丙": {"meaning": "3rd heavenly stem", "type": "cyclical"},
+    "戊": {"meaning": "5th heavenly stem", "type": "cyclical"},
+}
+
+# Common formulas (patterns as regex)
+PATTERNS = [
+    {
+        "name": "divination",
+        "regex": r"(?P<day>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])卜(?P<diviner>[\w]+)?貞?(?P<question>[^。]+)?",
+        "template": "On {day_pinyin} (day {day_num}), divining: {diviner_text}asks — {question_text}."
+    },
+    {
+        "name": "dual_day_ritual",
+        "regex": r"(?P<day1>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])，(?P<day2>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])。又(?P<type>有|藏)?于(?P<target>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]|大乙)",
+        "template": "On {day1_pinyin} (day {day1_num}), {day2_pinyin} (day {day2_num}). There was a {ritual_type} ritual on/for {target}."
+    },
+    {
+        "name": "simple_ritual",
+        "regex": r"(?P<day>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])，又(?P<type>有|藏)?于(?P<target>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]|大乙)",
+        "template": "On {day_pinyin} (day {day_num}), there was a {ritual_type} ritual on/for {target}."
+    },
+    {
+        "name": "accomplishment",
+        "regex": r"(?P<day>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])，?(?P<object1>鼎)?\(?(?P<mark1>[^\)]+)?\)?，?(?P<object2>又)?\(?(?P<mark2>[^\)]+)?\)?成于(?P<target>[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]|大乙)",
+        "template": "On {day_pinyin} (day {day_num}), {object1_desc}{object2_desc} accomplished for {target}."
+    },
+    {
+        "name": "ancestor_dedication",
+        "regex": r"(?P<target>大乙)(?P<day>([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])?)，?(?P<object1>鼎)?\(?(?P<mark1>[^\)]+)?\)?，?(?P<object2>又)?\(?(?P<mark2>[^\)]+)?\)?成于(?P<target2>大乙)",
+        "template": "Grand Ancestor Yi, {day_text}{object1_desc}{object2_desc} accomplished for Grand Ancestor Yi."
+    }
+]
+
+# ========================== UTILITIES ==========================
+
+def get_day_info(day_str: str) -> Optional[Dict]:
+    """Return day info (number, pinyin) for a given cyclical day string."""
+    if day_str in CYCLICAL_DAYS:
+        return CYCLICAL_DAYS[day_str]
+    return None
+
+def parse_annotated(text: str) -> str:
+    """Convert annotated text like '鼎(右)' to descriptive form."""
+    # Replace parentheses with descriptive markers
+    # e.g., "鼎(右)" -> "vessel [right]"
+    def replace_ann(match):
+        char = match.group(1)
+        ann = match.group(2)
+        # Look up char meaning if in glossary
+        meaning = GLOSSARY.get(char, {}).get("meaning", char)
+        return f"{meaning} [{ann}]"
+    pattern = r'([^\s\(]+)\(([^\)]+)\)'
+    return re.sub(pattern, replace_ann, text)
+
+def translate_text(text: str) -> Dict:
+    """
+    Main translation function.
+    Returns a dictionary with translation, confidence, and reasoning.
+    """
+    original = text
+    text_clean = text.strip()
+    result = {
+        "original": original,
+        "translation": "",
+        "confidence": 0.0,
+        "reasoning": [],
+        "matched_pattern": None
+    }
+
+    # Step 1: Identify cyclical days
+    day_matches = re.findall(r'[甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]', text_clean)
+    days_found = {}
+    for d in day_matches:
+        info = get_day_info(d)
+        if info:
+            days_found[d] = info
+
+    # Step 2: Parse annotated terms
+    annotated_text = parse_annotated(text_clean)
+    result["reasoning"].append(f"Annotated text: {annotated_text}")
+
+    # Step 3: Match patterns
+    matched = False
+    for pattern in PATTERNS:
+        m = re.search(pattern["regex"], text_clean)
+        if m:
+            matched = True
+            result["matched_pattern"] = pattern["name"]
+            groups = m.groupdict()
+            result["reasoning"].append(f"Matched pattern: {pattern['name']}")
+            # Prepare template variables
+            template_vars = {}
+            for key, value in groups.items():
+                if value:
+                    if key.startswith("day"):
+                        # Handle day variables
+                        if value in days_found:
+                            template_vars[f"{key}_pinyin"] = value
+                            template_vars[f"{key}_num"] = days_found[value]["number"]
+                        else:
+                            template_vars[key] = value
+                    elif key in ["target", "target2"]:
+                        if value in days_found:
+                            template_vars[key] = f"{value} (day {days_found[value]['number']})"
+                        elif value == "大乙":
+                            template_vars[key] = "Grand Ancestor Yi"
+                        else:
+                            template_vars[key] = value
+                    elif key in ["object1", "object2"]:
+                        # Look up meaning
+                        meaning = GLOSSARY.get(value, {}).get("meaning", value)
+                        template_vars[key] = meaning
+                    elif key in ["mark1", "mark2"]:
+                        template_vars[key] = f"[{value}]"
+                    elif key == "type":
+                        template_vars["ritual_type"] = GLOSSARY.get(value, {}).get("meaning", value)
+                    elif key == "diviner":
+                        template_vars["diviner_text"] = f"{value} " if value else ""
+                    elif key == "question":
+                        template_vars["question_text"] = value
+                    else:
+                        template_vars[key] = value
+                else:
+                    template_vars[key] = ""
+
+            # Fill template
+            translation = pattern["template"].format(**template_vars)
+            # Clean up extra spaces
+            translation = re.sub(r'\s+', ' ', translation).strip()
+            result["translation"] = translation
+            result["confidence"] = 0.8  # base confidence
+            break
+
+    if not matched:
+        # Fallback: word-by-word gloss
+        words = []
+        for char in text_clean:
+            if char in GLOSSARY:
+                words.append(f"{char} ({GLOSSARY[char]['meaning']})")
+            elif char in "，。、（）":
+                continue
+            else:
+                words.append(char)
+        result["translation"] = "Word breakdown: " + " ".join(words)
+        result["confidence"] = 0.3
+        result["reasoning"].append("No formula pattern matched; provided word gloss.")
+
+    # Add reasoning about days
+    if days_found:
+        day_list = ", ".join([f"{d} (day {info['number']})" for d, info in days_found.items()])
+        result["reasoning"].append(f"Cyclical days identified: {day_list}")
+
+    return result
+
+# ========================== DEMO / CLI ==========================
+
+def demo():
+    """Run demo with examples from user's images."""
+    examples = [
+        "丁卯，庚戌。又（有）藏于乙巳。",
+        "丁卯，庚戌。又（有）藏于丙午。",
+        "辛未，庚戌。又（有）藏于丁巳。",
+        "辛未，庚戌。又（有）藏于戊午。",
+        "乙巳卜王貞吉",
+        "丁卯，鼎(右)，又(左)成于乙巳。",
+        "丁卯，鼎（a），又（b）成于大乙。",
+        "大乙戊午，鼎（a），又（b）成于大乙。"
+    ]
+    print("=" * 60)
+    print("ORACLE BONE TRANSLATION CODEX DEMO")
+    print("=" * 60)
+    for ex in examples:
+        res = translate_text(ex)
+        print(f"\n原始: {ex}")
+        print(f"翻译: {res['translation']}")
+        print(f"置信度: {res['confidence']}")
+        print("推理步骤:")
+        for step in res['reasoning']:
+            print(f"  - {step}")
+        print("-" * 40)
+
+def interactive():
+    """Interactive mode: prompt user for input."""
+    print("Oracle Bone Translation Codex (type 'quit' to exit)")
+    while True:
+        text = input("\n输入甲骨文句子: ").strip()
+        if text.lower() in ['quit', 'exit', 'q']:
+            break
+        if not text:
+            continue
+        res = translate_text(text)
+        print(f"\n翻译: {res['translation']}")
+        print(f"置信度: {res['confidence']}")
+        print("推理:")
+        for step in res['reasoning']:
+            print(f"  - {step}")
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "--demo":
+        demo()
+    else:
+        interactive()
