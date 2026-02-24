@@ -1,3 +1,32 @@
+## 🚀 Getting Started
+
+To run this project locally, follow these steps:
+
+```bash
+# Clone the repository
+git clone https://github.com/anthonyjblair8-source/AlphaOracle.git
+
+# Enter the project folder
+cd AlphaOracle
+
+# (Optional) Create a virtual environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install Jupyter if not already included
+pip install jupyter
+
+# Launch the notebook
+jupyter notebook
+```
+
+Then open the `universal translation engine` notebook and run the cells.
 <div align="center">
   <img src="https://v1.ax1x.com/2025/10/03/EIkNeV.png" width="200">
 </div>
