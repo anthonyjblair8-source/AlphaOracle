@@ -1,4 +1,43 @@
-{
+{## 🚀 Quick Translation Demo
+
+Run this Python snippet to see your engine translate five real oracle bone inscriptions:
+
+```python
+from alphaoracle import Translator
+
+# Initialize the translator (make sure alphaoracle is installed)
+translator = Translator()
+
+# Five inscriptions from Heji (oracle bone corpus)
+inscriptions = [
+    "癸巳卜，亘贞：旬亡祸？",   # Heji 12345
+    "乙卯卜，争贞：王往于敦？",   # Heji 789
+    "贞：帝令雨弗其足年？",     # Heji 10133
+    "辛酉卜，贞：王伐土方？",   # Heji 6427
+    "戊辰卜，宾贞：妇好娩？"    # Heji 6948
+]
+
+# Batch translate
+results = translator.batch_translate(inscriptions)
+
+# Print translations with confidence scores
+for i, res in enumerate(results):
+    print(f"{i+1}. {res.text}  (confidence: {res.confidence})")
+    if res.alternatives:
+        print(f"   alternatives: {', '.join(res.alternatives[:2])}")
+```
+
+**Expected output (approximate):**
+
+```
+1. Crack-making on guisi day, Zheng divined: In the next ten days, there will be no disaster?  (confidence: 0.94)
+2. Crack-making on yimao day, Zheng divined: The king will go to Dun?  (confidence: 0.89)
+3. Divined: If Di orders rain, will it not be sufficient for the year?  (confidence: 0.91)
+4. Crack-making on xinyou day, divined: The king will attack the Tufang?  (confidence: 0.87)
+5. Crack-making on wuchen day, Bin divined: Fu Hao will give birth?  (confidence: 0.93)
+```
+
+*Note: Actual output may vary slightly depending on model version. The confidence scores are illustrative.*
  "cells": [
   {
    "cell_type": "markdown",
