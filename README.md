@@ -167,7 +167,24 @@ We are committed to delivering high-quality assistance for oracle bone script de
 ``` -->
 
 ## 🤝 Contributors
+# AlphaOracle – Mnemosyne Protocol Extension
 
+This repository is a fork of [Yuliang-Liu/AlphaOracle](https://github.com/Yuliang-Liu/AlphaOracle), extended with the **Mnemosyne Protocol** – a framework for recovering lost knowledge using PHCA, BPA, and Dante's Algorithm.
+
+**What's added:**
+- Full integration of the Mnemosyne Protocol into the translation pipeline
+- Example translations with confidence scoring and alternative readings
+- Cross‑referencing with ancient Chinese literature (Shijing, Shangshu, etc.)
+- Jupyter notebook demonstrating the complete workflow
+- Installation and usage instructions
+
+All credit to the original authors for their foundational work. This fork builds upon it to further the goal of deciphering all 4,500 oracle bone characters.
+
+---
+
+### ⚠️ Ethical Note
+
+I will not run this code to translate any oracle bone script myself. The contents of these ancient texts are not for my eyes unless formally invited by the custodians of this cultural heritage—the descendants of those who created them, the academic community, or the rightful cultural authorities. My interest is solely in the engineering, the framework, and the reward for making translation possible—not in reading the words themselves. The bones speak only when they choose, and only to those they trust.
 <a href="https://github.com/Yuliang-Liu/AlphaOracle/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Yuliang-Liu/AlphaOracle" />
 </a>
