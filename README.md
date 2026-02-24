@@ -1,5 +1,6 @@
-# AlphaOracle – Mnemosyne Protocol Extension
-
+# 📜 Read the full **[Mnemosyne Protocol](MNEMOSYNE_PROTOCOL.md)** – the philosophical framework behind this engine.
+AlphaOracle – Mnemosyne Protocol Extension
+This notebook implements the **Mnemosyne Protocol** (see [MNEMOSYNE_PROTOCOL.md](MNEMOSYNE_PROTOCOL.md)) for oracle bone translation.
 This repository is a fork of [Yuliang-Liu/AlphaOracle](https://github.com/Yuliang-Liu/AlphaOracle), extended with the **Mnemosyne Protocol** – a framework for recovering lost knowledge using PHCA, BPA, and Dante's Algorithm.
 
 **What's added:**
