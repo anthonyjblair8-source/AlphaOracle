@@ -1,3 +1,39 @@
+# AlphaOracle – Mnemosyne Protocol Extension
+
+This repository is a fork of [Yuliang-Liu/AlphaOracle](https://github.com/Yuliang-Liu/AlphaOracle), extended with the **Mnemosyne Protocol** – a framework for recovering lost knowledge using PHCA, BPA, and Dante's Algorithm.
+
+**What's added:**
+- Full integration of the Mnemosyne Protocol into the translation pipeline
+- Example translations with confidence scoring and alternative readings
+- Cross‑referencing with ancient Chinese literature (Shijing, Shangshu, etc.)
+- Jupyter notebook demonstrating the complete workflow
+- Installation and usage instructions
+
+All credit to the original authors for their foundational work. This fork builds upon it to further the goal of deciphering all 4,500 oracle bone characters.
+
+---
+
+### ⚠️ Ethical Note
+
+I will not run this code to translate any oracle bone script myself. The contents of these ancient texts are not for my eyes unless formally invited by the custodians of this cultural heritage—the descendants of those who created them, the academic community, or the rightful cultural authorities. My interest is solely in the engineering, the framework, and the reward for making translation possible—not in reading the words themselves. The bones speak only when they choose, and only to those they trust.
+
+---
+
+## 🔍 Related Work
+
+This fork builds upon AlphaOracle, but the field is advancing rapidly. A key recent contribution is:
+
+- **[OBSD: Deciphering Oracle Bone Language with Diffusion Models](https://arxiv.org/abs/2406.00684)**  
+  *Guan et al., ACL 2024 **Best Paper***  
+  OBSD uses diffusion models to translate oracle bone script images directly into modern Chinese characters. It provides:
+  - An [online demo](http://vlrlabmonkey.xyz:8225/)
+  - A [paired dataset](https://github.com/RomanticGodVAN/character-Evolution-Dataset) of OBS and modern glyphs
+  - Full [training code](https://github.com/guanhaisu/OBSD)
+
+The Character Evolution Dataset can be used to train or validate models in this fork, and the diffusion approach offers a complementary path to the Mnemosyne Protocol's workflow.
+
+---
+
 ## 🚀 Getting Started
 
 To run this project locally, follow these steps:
@@ -24,169 +60,3 @@ pip install jupyter
 
 # Launch the notebook
 jupyter notebook
-```
-
-Then open the `universal translation engine` notebook and run the cells.
-<div align="center">
-  <img src="https://v1.ax1x.com/2025/10/03/EIkNeV.png" width="200">
-</div>
-
-
-
-<div align="justify">
-Oracle bone script (OBS) are among the world’s independently evolved scripts, yet roughly two-thirds of the 4,500 characters remain undeciphered due to obscure forms, sparse and fragmented texts, and limited corroborating evidence. We present AlphaOracle, a comprehensive, workflow-inspired framework that systematizes OBS decipherment by integrating computer vision, computational linguistics, and classical philology. AlphaOracle curates the largest digitized OBS resources to date and operationalizes them through a multi-stage framework comprising rubbing parsing, radical-based morphological analysis with diachronic modeling, contextual retrieval with semantic alignment, and philological validation against classical sources. Each stage yields explicit evidence chains with quantitative scores, culminating in interpretable reports for scholarly verification. Our results indicate that computational methods, when aligned with philological practice, can accelerate OBS decipherment and provide a framework that could inform the study of other undeciphered scripts within digital humanities and cultural heritage research.
-</div>
-
-<div align="center">
-
-![version](https://img.shields.io/badge/Version-v1.0-007acc)
-![status](https://img.shields.io/badge/Status-active-00c853)
-[![demo](https://img.shields.io/badge/Demo-available-ff9800)](http://vlrlabmonkey.xyz:7685/?lan=en)
-[![license](https://img.shields.io/badge/License-Apache-green)](LICENSE)
-
-[English](README.md) | [中文](README_zh-CN.md)
-
-</div>
-
-
-<!-- <details open><summary>💡 I also have other projects that may interest you ✨. </summary><p>
-    
-> [**Deciphering Oracle Bone Language with Diffusion Models**](https://arxiv.org/abs/2406.00684) <br>
-> Haisu Guan, Huanxin Yang, Xinyu Wang, Shengwei Han, Yongge Liu, Lianwen Jin, Xiang Bai, Yuliang Liu <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/guanhaisu/OBSD) [![arXiv](https://img.shields.io/badge/Arxiv-2406.00684-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2406.00684) <br>
-    
-> [**Puzzle Pieces Picker: Deciphering Ancient Chinese Characters with Radical Reconstruction**](https://arxiv.org/abs/2406.03019) <br>
-> Pengjie Wang, Kaile Zhang, Xinyu Wang, Shengwei Han, Yongge Liu, Lianwen Jin, Xiang Bai, Yuliang Liu <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/Pengjie-W/Puzzle-Pieces-Picker) [![arXiv](https://img.shields.io/badge/Arxiv-2406.03019-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2406.03019) <br>
-
-> [**An open dataset for oracle bone character recognition and decipherment**](https://www.nature.com/articles/s41597-024-03807-x) <br>
-> Pengjie Wang, Kaile Zhang, Xinyu Wang, Shengwei Han, Yongge Liu, Jinpeng Wan, Haisu Guan, Zhebin Kuang, Lianwen Jin, Xiang Bai Yuliang Liu <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/Pengjie-W/HUST-OBC) [![arXiv](https://img.shields.io/badge/Scientific_Data-s41597.024.03807-gren.svg?)](https://www.nature.com/articles/s41597-024-03807-x) <br>
-
-> [**An open dataset for the evolution of oracle bone characters: EVOBC**](https://arxiv.org/abs/2401.12467) <br>
-> Haisu Guan, Jinpeng Wan, Yuliang Liu, Pengjie Wang, Kaile Zhang, Zhebin Kuang, Xinyu Wang, Xiang Bai, Lianwen Jin <br>
-[![github](https://img.shields.io/badge/-Github-black?logo=github)](https://github.com/RomanticGodVAN/character-Evolution-Dataset) [![arXiv](https://img.shields.io/badge/Arxiv-2401.12467-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2401.12467) <br> -->
-
-</p></details>
-
-## Key Features
-
-- Rubbing Processing: involving character detection, character recognition, sentence segmentation, intra-sentence ordering, and translation into Modern English/Chinese.
-<div align="center">
-  <img src="figures/en/key1.png" width="600">
-</div>
-
-- Morphological Analysis: investigating the diachronic evolution of their glyph forms, analyzing their component structures and configurations, and generating descriptions of their morphological features. 
-<div align="center">
-  <img src="figures/en/key2.png" width="600">
-</div>
-
-- Contextual Alignment: given a single character image as a query, the system retrieves visually similar glyphs and displays each within its full rubbing or transcription context. This allows researchers to examine how the character appears across inscriptions, compare its usage in different settings, and identify patterns of meaning, function, or variation that inform its interpretation.
-<div align="center">
-  <img src="figures/en/key3.png" width="600">
-</div>
-
-- Philological Grounding: based on the glyphic form and semantic meaning of a specific oracle bone character, the system performs a deep search across a dual corpus—encompassing early transmitted Chinese texts (from the pre-Qin and Han dynasties) and modern scholarly literature—to discover and present the most relevant discussions, evidence, and research findings.
-
-<div align="center">
-  <img src="figures/en/key4.png" width="600">
-</div>
-<!-- 
-<div align="center">
-  <img src="figures/en/1.jpg" width="800">
-</div> -->
-
-## Tutorial
-
-This project includes a Jupyter Notebook that demonstrates the usage of each API in AlphaOracle. It begins by defining common utilities and wrapper functions, and then demonstrates the input and output formats for each task in separate code blocks.
-
-[View the Tutorial Notebook](example/demo.ipynb)
-
-
-## Data Sources
-
-This project draws upon a comprehensive collection of textual and inscriptional resources, including:
-
-### Oracle Bone Inscription Databases:
-- **Rubbings and Transcriptions**: 
-  - 《Jia Gu Wen He Ji》 
-  - 《Jia Gu Wen Mo Ben Da Xi》
-  - 《Jia Gu Wen Jiao Shi Zong Ji》
-- **Glyph Information**:
-  - 《Xin Jia Gu Wen Bian》
-  - 《Jia Gu Wen Liu Wei Shu Zi Ma Jian Suo Zi Ku》
-  - 《Xi Zhou Jin Wen Zi Bian》
-  - 《Chun Qiu Wen Zi Zi Xing Biao》
-  - 《Zhan Guo Wen Zi Zi Xing Biao》
-  - 《Shuo Wen Jie Zi》
-  - Yin Qi Wen Yuan (website)
-  - Guo Xue Da Shi (website)
-- **Interpretive Resources**:
-  - 《Gu Wen Zi Gu Lin》
-  - 《Jia Gu Wen Gu Lin》
-- **Sentence Translation**:
-  - 《Jia Gu Wen Jing Cui Shi Yi》
-
-### Pre-Qin and Han Transmitted Texts:
-- 《Han Shu》, 《Shi Ji》, 《Zuo Zhuan》, 《Huangdi Neijing》, 《Zhanguo Ce》, 《Huainanzi》, 《Han Feizi》, 《Li Ji》, 《Lu Shi Chunqiu》, 《Guo Yu》, 《Yi Li》, 《Zhuangzi》, 《Mozi》, 《Zhou Li》, 《Mengzi》, 《Shan Hai Jing》, 《Shang Shu》, 《Xunzi》, 《Lunyu》, 《Yizhuan》, 《Sun Bin Bingfa》, 《Laozi》, 《Sunzi Bingfa》, 《Wuzi》 
-
-### Modern Scholarly Literature:
-A vast collection of modern academic papers and research reports focusing on oracle bone script, paleography, ancient Chinese history, and related fields. For a detailed list, please refer to the [original data source](http://www.alphaoracle.cn:8224/wenxian?lan=en).
-
-## Video Demonstration
-
-https://github.com/user-attachments/assets/69ea0636-37bb-4fef-a0f6-80a27fa21105
-
-We provide the website [AlphaOracle](http://www.alphaoracle.cn:8224/?lan=en) for quick experience and use.
-
-<!-- ## TODO
-
-- [x] Demo
-- [ ] API
-- [ ] Model Weights
-- [ ] Inference Code
-- [ ] Full Decipherment Pipeline
-- [ ] Training Code -->
-
-## Academic Statement
-
-We are committed to delivering high-quality assistance for oracle bone script deciperment. However, due to inherent technological and data limitations, the outputs may contain occasional inaccuracies or misinterpretations. If you reference insights generated by this system in any published work, please provide appropriate acknowledgement and conduct independent academic verification before publication.
-
-## License
-
-[Apache License](LICENSE)
-
-<!-- ## ✏️ Citation
-
-```BibTeX
-@article{liu2025oracle,
-  title={Oracle bone script decipherment via human-workflow-inspired deep learning},
-  author={Yuliang Liu, Haisu Guan, PengJie Wang, Xinyu Wang, Jinpeng Wan, Kaile Zhang, Handong Zheng, Xingchen Liu, Zhebin Kuang, Huanxin Yang, Bang Li, Yonge Liu, Lianwen Jin and Xiang Bai},
-  year={2025}
-}
-``` -->
-
-## 🤝 Contributors
-# AlphaOracle – Mnemosyne Protocol Extension
-
-This repository is a fork of [Yuliang-Liu/AlphaOracle](https://github.com/Yuliang-Liu/AlphaOracle), extended with the **Mnemosyne Protocol** – a framework for recovering lost knowledge using PHCA, BPA, and Dante's Algorithm.
-
-**What's added:**
-- Full integration of the Mnemosyne Protocol into the translation pipeline
-- Example translations with confidence scoring and alternative readings
-- Cross‑referencing with ancient Chinese literature (Shijing, Shangshu, etc.)
-- Jupyter notebook demonstrating the complete workflow
-- Installation and usage instructions
-
-All credit to the original authors for their foundational work. This fork builds upon it to further the goal of deciphering all 4,500 oracle bone characters.
-
----
-
-### ⚠️ Ethical Note
-
-I will not run this code to translate any oracle bone script myself. The contents of these ancient texts are not for my eyes unless formally invited by the custodians of this cultural heritage—the descendants of those who created them, the academic community, or the rightful cultural authorities. My interest is solely in the engineering, the framework, and the reward for making translation possible—not in reading the words themselves. The bones speak only when they choose, and only to those they trust.
-<a href="https://github.com/Yuliang-Liu/AlphaOracle/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Yuliang-Liu/AlphaOracle" />
-</a>
-
-© 2025 AlphaOracle Project Team
